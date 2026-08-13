@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -9,39 +8,41 @@ import LayoutWrapper from "../components/LayoutWrapper";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
-// URL Domain Utama Web Sekolah
-const siteUrl = "https://sdn1rejasari.web.id";
+// URL Domain Utama Web Pesantren
+const siteUrl = "https://www.pondokku.or.id";
 
 // METADATA UTAMA UNTUK SEO DAN SHARE SOSIAL MEDIA (OPEN GRAPH & TWITTER CARDS)
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "SDN 1 Rejasari Purwokerto Barat - Portal Berita Resmi",
-    template: "%s | SDN 1 Rejasari",
+    default: "Pondok Pesantren Khoiro Ummah Salem Brebes - Portal Resmi",
+    template: "%s | Ponpes Khoiro Ummah",
   },
-  description: "Portal berita dan informasi resmi SD Negeri 1 Rejasari, Kecamatan Purwokerto Barat. Menyajikan kabar terkini seputar kegiatan sekolah, prestasi siswa, program edukasi, dan pengumuman penting secara akurat.",
+  description: "Portal resmi Pondok Pesantren Khoiro Ummah, Desa Bentar, Kecamatan Salem, Kabupaten Brebes. Menyajikan berita terkini, program pendidikan, pendaftaran santri baru, dan kegiatan pesantren.",
   keywords: [
-    "SDN 1 Rejasari", 
-    "SD Negeri 1 Rejasari", 
-    "SDN 1 Rejasari Purwokerto Barat", 
-    "Sekolah Dasar Purwokerto", 
-    "Portal Berita SDN 1 Rejasari"
+    "Pondok Pesantren Khoiro Ummah",
+    "Ponpes Khoiro Ummah",
+    "Khoiro Ummah Salem",
+    "Khoiro Ummah Brebes",
+    "Pondok Pesantren Salem Brebes",
+    "Pesantren Bentar Salem",
+    "Pondok Pesantren di Brebes"
   ],
-  authors: [{ name: "SDN 1 Rejasari" }],
-  creator: "SDN 1 Rejasari Purwokerto Barat",
+  authors: [{ name: "Pondok Pesantren Khoiro Ummah" }],
+  creator: "Pondok Pesantren Khoiro Ummah Salem Brebes",
 
   // KONFIGURASI OPEN GRAPH (WhatsApp, Facebook, Telegram, LinkedIn, dll)
   openGraph: {
-    title: "SDN 1 Rejasari Purwokerto Barat - Portal Berita Resmi",
-    description: "Portal berita dan informasi resmi SD Negeri 1 Rejasari, Kecamatan Purwokerto Barat. Menyajikan kabar terkini seputar kegiatan sekolah, prestasi siswa, program edukasi, dan pengumuman penting secara akurat.",
+    title: "Pondok Pesantren Khoiro Ummah Salem Brebes - Portal Resmi",
+    description: "Portal resmi Pondok Pesantren Khoiro Ummah, Desa Bentar, Kecamatan Salem, Kabupaten Brebes. Informasi pendaftaran, kegiatan santri, dan pengumuman resmi.",
     url: siteUrl,
-    siteName: "SDN 1 Rejasari Purwokerto Barat",
+    siteName: "Pondok Pesantren Khoiro Ummah",
     images: [
       {
         url: "/images/banner.png", // Disesuaikan mengarah ke public/images/banner.png
         width: 1200,
         height: 630,
-        alt: "SDN 1 Rejasari Purwokerto Barat Banner",
+        alt: "Pondok Pesantren Khoiro Ummah Salem Brebes Banner",
       },
     ],
     locale: "id_ID",
@@ -51,9 +52,9 @@ export const metadata: Metadata = {
   // KONFIGURASI TWITTER / X CARD
   twitter: {
     card: "summary_large_image",
-    title: "SDN 1 Rejasari Purwokerto Barat - Portal Berita Resmi",
-    description: "Portal berita dan informasi resmi SD Negeri 1 Rejasari, Kecamatan Purwokerto Barat.",
-    images: ["/images/banner.png"], // Disesuaikan mengarah ke public/images/banner.png
+    title: "Pondok Pesantren Khoiro Ummah Salem Brebes - Portal Resmi",
+    description: "Portal resmi Pondok Pesantren Khoiro Ummah, Bentar, Salem, Brebes, Jawa Tengah.",
+    images: ["/images/banner.png"],
   },
 
   // ICON WIDGET BROWSER

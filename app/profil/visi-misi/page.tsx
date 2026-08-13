@@ -1,13 +1,12 @@
-// app/profil/visi-misi/page.tsx
 import React from 'react';
 
 export default function VisiMisiPage() {
-  // Menyesuaikan detail misi agar sejalan dengan poin Berakhlak, Mandiri, dan Kompetitif dari Visi Baru
+  // Menyesuaikan detail misi agar sejalan dengan poin Visi Pondok Pesantren Khoiro Ummah
   const misiItems = [
-    { title: "Imtaq & Akhlak Mulia", desc: "Menanamkan nilai keagamaan, budi pekerti, serta karakter luhur berlandaskan keimanan dan ketaqwaan." },
-    { title: "Kemandirian Siswa", desc: "Mendorong kebebasan belajar yang aktif untuk membentuk karakter peserta didik yang mandiri dan kreatif." },
-    { title: "Prestasi & Kompetitif", desc: "Mengembangkan potensi akademik dan non-akademik siswa agar unggul serta kompetitif di era Kurikulum Merdeka." },
-    { title: "Sinergi Inovatif", desc: "Menyelenggarakan pembelajaran inovatif dan menyenangkan melalui kerja sama sinergis dengan orang tua dan masyarakat." }
+    { title: "Ketaqwaan & Akhlak Mulia", desc: "Menanamkan akidah Islamiyyah yang lurus, akhlakul karimah, serta nilai-nilai Al-Qur'an dan As-Sunnah dalam kehidupan sehari-hari." },
+    { title: "Tahfidz & Ulumuddin", desc: "Menyelenggarakan program tahfidzul Qur'an yang terstruktur dan pembelajaran ilmu-ilmu syar'i untuk mencetak generasi Rabbani." },
+    { title: "Kemandirian & Kepemimpinan", desc: "Membentuk karakter santri yang mandiri, disiplin, berjiwa kepemimpinan, dan siap mengabdi kepada masyarakat." },
+    { title: "Sinergi & Berprestasi", desc: "Mengembangkan potensi keilmuan, bahasa, serta keterampilan santri secara unggul dan bersinergi bersama wali santri & masyarakat." }
   ];
 
   return (
@@ -15,8 +14,8 @@ export default function VisiMisiPage() {
     <div className="w-full max-w-[1200px] mx-auto px-4 font-sans text-gray-800 mt-6 min-h-screen">
       
       {/* =========================================================
-         HERO HEADER: MODERN FUTURISTIC GRADIENT
-         ========================================================= */}
+          HERO HEADER: MODERN FUTURISTIC GRADIENT
+          ========================================================= */}
       <div className="w-full bg-linear-to-br from-[#001f3f] via-[#004b80] to-[#0066ad] py-14 text-white text-center rounded-2xl shadow-md relative overflow-hidden">
         {/* Dekorasi Aksen Pola Geometris Khas Teknologi/Masa Depan */}
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
@@ -27,26 +26,26 @@ export default function VisiMisiPage() {
           </span>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight mt-3">Visi & Misi</h1>
           <p className="text-xs md:text-sm text-blue-100/80 mt-2 max-w-[550px] mx-auto font-medium leading-relaxed">
-            Arah langkah dan komitmen SD Negeri 1 Rejasari Purwokerto Barat dalam mencetak generasi masa depan.
+            Arah langkah dan komitmen Pondok Pesantren Khoiro Ummah Salem Brebes dalam mencetak generasi Rabbani dan berilmu.
           </p>
         </div>
       </div>
 
       {/* =========================================================
-         AREA KONTEN UTAMA
-         ========================================================= */}
+          AREA KONTEN UTAMA
+          ========================================================= */}
       <div className="max-w-[1000px] mx-auto py-12 space-y-12">
         
-        {/* SECTION VISI: DIBUAT PAS SESUAI DATA GAMBAR ASLI */}
+        {/* SECTION VISI */}
         <section className="relative p-8 md:p-10 rounded-2xl bg-gradient-to-b from-slate-50 to-white border border-gray-200/60 shadow-xs overflow-hidden group text-center">
           {/* Efek Garis Menyala Biru di Atas Kartu */}
           <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-400 via-[#0066ad] to-indigo-500"></div>
           
           <h2 className="text-xs uppercase tracking-widest text-[#0066ad] font-extrabold mb-3">
-            VISI SEKOLAH
+            VISI PESANTREN
           </h2>
           <p className="text-lg md:text-2xl font-black text-slate-900 tracking-tight leading-relaxed max-w-[850px] mx-auto">
-            "Terwujudnya Peserta Didik Yang Berakhlak Mulia, Cerdas, Berprestasi, Mandiri dan Kompetitif Berlandaskan Keimanan dan Ketaqwaan Kepada Tuhan Yang Maha Esa"
+            "Mewujudkan Generasi Rabbani yang Berakhlak Mulia, Hafizh Al-Qur'an, Cerdas, Mandiri, dan Bermanfaat Bagi Ummat Berlandaskan Al-Qur'an dan As-Sunnah"
           </p>
         </section>
 

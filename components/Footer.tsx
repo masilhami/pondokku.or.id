@@ -1,4 +1,3 @@
-// components/Footer.tsx
 import { FaYoutube, FaFacebook, FaInstagram, FaTwitter, FaTiktok } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -10,14 +9,14 @@ export default function Footer() {
   
   // 1. Edit Menu Jelajahi Situs (Kolom Tengah)
   const quickLinks = [
-    { name: "Profil Sekolah", href: "/profil" },
+    { name: "Profil Pesantren", href: "/profil" },
     { name: "Visi & Misi", href: "/profil/visi-misi" },
-    { name: "Data Guru & Staf", href: "/guru-staf" },
+    { name: "Ustaz & Pengasuh", href: "/guru-staf" },
     { name: "Galeri Kegiatan", href: "/galeri" },
     { name: "Pengumuman", href: "/pengumuman" },
     { name: "Media Islam", href: "https://onislam.web.id" },
-    { name: "Prestasi Siswa", href: "/prestasi" },
-    { name: "Kontak Hubungi Kami", href: "/kontak" }
+    { name: "Prestasi Santri", href: "/prestasi" },
+    { name: "Kontak Kami", href: "/kontak" }
   ];
 
   // 2. Edit Menu Informasi & Regulasi (Kolom Kanan)
@@ -42,11 +41,11 @@ export default function Footer() {
       {/* Kontainer Atas: Konten Utama Footer */}
       <div className="max-w-[1200px] mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-12 gap-8">
         
-        {/* Kolom Kiri: Logo & Deskripsi Instansi Sekolah */}
+        {/* Kolom Kiri: Logo & Deskripsi Instansi Pesantren */}
         <div className="md:col-span-5 space-y-4">
-          <img src="/images/logo-sdn.png" alt="Logo SDN 1 Rejasari" className="h-8 md:h-10" />
+          <img src="/images/logo-ponpes.png" alt="Logo Pondok Pesantren Khoiro Ummah" className="h-8 md:h-10" />
           <p className="text-xs text-gray-500 leading-relaxed max-w-[400px]">
-            Portal berita dan informasi resmi SD Negeri 1 Rejasari, Kecamatan Purwokerto Barat. Menyajikan kabar terkini seputar kegiatan sekolah, prestasi siswa, program edukasi, dan pengumuman penting secara akurat.
+            Portal berita dan informasi resmi Pondok Pesantren Khoiro Ummah. Alamat: Desa Bentar, Kecamatan Salem, Kabupaten Brebes, Jawa Tengah. Menyajikan kabar terkini seputar kegiatan pesantren, prestasi santri, program dakwah, dan pengumuman penting secara akurat.
           </p>
           
           {/* Sosial Media Resmi (Otomatis Loop) */}
@@ -98,8 +97,8 @@ export default function Footer() {
       {/* Kontainer Bawah: Hak Cipta Resmi */}
       <div className="bg-gray-50 border-t border-gray-100 py-4">
         <div className="max-w-[1200px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-gray-400">
-          <p>© 2026 SDN 1 Rejasari Purwokerto Barat. All Rights Reserved.</p>
-          <p>Portal Informasi & Kabar Edukasi Lingkungan Sekolah.</p>
+          <p>© 2026 Pondok Pesantren Khoiro Ummah Salem Brebes. All Rights Reserved.</p>
+          <p>www.pondokku.or.id - Portal Informasi & Kabar Edukasi Pesantren.</p>
         </div>
       </div>
     </footer>
