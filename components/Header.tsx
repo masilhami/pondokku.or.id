@@ -1,7 +1,10 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
-import { FaSearch, FaYoutube, FaFacebook, FaInstagram, FaTwitter, FaTiktok, FaRegUser, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { 
+  FaSearch, FaYoutube, FaFacebook, FaInstagram, FaTwitter, FaTiktok, 
+  FaRegUser, FaAngleLeft, FaAngleRight, FaTimes 
+} from 'react-icons/fa';
 import { HiOutlineNewspaper, HiMenu } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -33,6 +36,7 @@ export default function Header() {
   
   const [midBannerData, setMidBannerData] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const categoriesRef = useRef<HTMLDivElement>(null);
   const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -67,6 +71,7 @@ export default function Header() {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -131,25 +136,42 @@ export default function Header() {
       {/* =========================================================
           BARIS 1: HEADER UTAMA (STICKY TOP SEPANJANG SCROLL HALAMAN)
           ========================================================= */}
-      <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm select-none">
+      <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-xs select-none">
         <div className="flex flex-col md:flex-row md:items-center justify-between px-4 py-2 max-w-[1200px] mx-auto gap-2 md:gap-4">
           
-          {/* AREA LOGO */}
+          {/* AREA LOGO & HAMBURGER */}
           <div className="flex items-center justify-between md:justify-start gap-4 md:gap-5 w-full md:w-auto shrink-0">
             <div className="flex items-center gap-3">
-              <HiMenu className="text-2xl text-gray-700 cursor-pointer md:hidden" />
+              {/* Tombol Hamburger Aktif untuk Mobile */}
+              <button 
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="text-2xl text-gray-700 md:hidden focus:outline-none p-1"
+                aria-label="Buka Menu"
+              >
+                <HiMenu />
+              </button>
+              
               <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
                 <img 
                   src="/images/logo-ponpes.png" 
                   alt="Logo Pondok Pesantren Khoiro Ummah" 
-                  className="h-8 sm:h-9 md:h-10 lg:h-11 w-auto max-w-[180px] sm:max-w-[220px] md:max-w-[260px] object-contain cursor-pointer" 
+                  className="h-10 sm:h-11 md:h-12 lg:h-13 w-auto max-w-[220px] sm:max-w-[250px] md:max-w-[300px] object-contain cursor-pointer" 
                 />
               </Link>
             </div>
+            
             <div className="text-[11px] md:text-xs text-gray-400 font-medium leading-tight hidden xl:block border-l border-gray-300 pl-4 py-0.5 font-sans">
               {date.line1}<br />{date.line2}
             </div>
-            <FaRegUser className="text-xl text-gray-600 cursor-pointer md:hidden" />
+
+            {/* Icon User Mobile -> Menuju https://pondokku.or.id/studio */}
+            <a 
+              href="https://pondokku.or.id/studio"
+              className="text-xl text-gray-600 hover:text-[#0066ad] transition-colors p-1 md:hidden"
+              title="Studio Sanity"
+            >
+              <FaRegUser />
+            </a>
           </div>
           
           {/* AREA PENCARIAN */}
@@ -172,7 +194,7 @@ export default function Header() {
             </form>
           </div>
 
-          {/* AREA SOSIAL MEDIA */}
+          {/* AREA SOSIAL MEDIA & USER DESKTOP */}
           <div className="hidden md:flex items-center justify-end gap-3 lg:gap-4 text-gray-500 text-base shrink-0">
             <div className="flex gap-3 text-gray-400 text-lg">
               <a href="#" className="hover:text-red-600 cursor-pointer transition-colors"><FaYoutube /></a> 
@@ -182,8 +204,16 @@ export default function Header() {
               <a href="#" className="hover:text-blue-500 cursor-pointer transition-colors"><HiOutlineNewspaper /></a> 
               <a href="#" className="hover:text-black cursor-pointer transition-colors"><FaTiktok /></a>
             </div>
+            
+            {/* Icon User Desktop -> Menuju https://pondokku.or.id/studio */}
             <div className="border-l border-gray-200 pl-3">
-              <FaRegUser className="text-lg cursor-pointer text-gray-500 hover:text-gray-800 transition-colors" />
+              <a 
+                href="https://pondokku.or.id/studio"
+                className="text-lg cursor-pointer text-gray-500 hover:text-[#0066ad] transition-colors block"
+                title="Studio Sanity"
+              >
+                <FaRegUser />
+              </a>
             </div>
           </div>
 
@@ -191,9 +221,72 @@ export default function Header() {
       </header>
 
       {/* =========================================================
-          BARIS 2: SLOT MEGA BANNER IKLAN (NON-STICKY)
+          DRAWER MENU MOBILE (DIPICU OLEH HAMBURGER)
           ========================================================= */}
-      <div className="w-full bg-slate-100/60 border-b border-gray-200 py-6 select-none">
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[100] md:hidden flex">
+          {/* Backdrop gelap */}
+          <div 
+            className="fixed inset-0 bg-black/50 transition-opacity" 
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Konten Menu Samping */}
+          <div className="relative w-[280px] max-w-[80%] bg-white h-full shadow-2xl z-10 flex flex-col justify-between overflow-y-auto">
+            <div className="p-5">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                <span className="font-extrabold text-sm text-gray-900 tracking-wider">MENU UTAMA</span>
+                <button 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-gray-500 hover:text-gray-800 p-1"
+                  aria-label="Tutup Menu"
+                >
+                  <FaTimes className="text-lg" />
+                </button>
+              </div>
+
+              {/* Daftar Menu Mobile */}
+              <div className="flex flex-col space-y-3 mt-4">
+                {categories.map((cat, idx) => (
+                  <Link 
+                    key={idx} 
+                    href={cat.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-sm font-semibold text-gray-700 hover:text-[#0066ad] py-1.5 transition-colors border-b border-gray-50"
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+                <Link 
+                  href="/agenda"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-sm font-semibold text-gray-700 hover:text-[#0066ad] py-1.5 transition-colors"
+                >
+                  Agenda
+                </Link>
+              </div>
+            </div>
+
+            {/* Footer Menu Mobile */}
+            <div className="p-5 bg-gray-50 border-t border-gray-100 space-y-3">
+              <a 
+                href="https://pondokku.or.id/studio"
+                className="flex items-center justify-center gap-2 w-full py-2 bg-[#0066ad] text-white text-xs font-bold rounded-lg shadow-sm hover:bg-[#004f87] transition-colors"
+              >
+                <FaRegUser /> Akses Studio Pesantren
+              </a>
+              <div className="text-center text-[10px] text-gray-400">
+                © 2026 Ponpes Khoiro Ummah
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================
+          BARIS 2: SLOT MEGA BANNER IKLAN (DISEMBUNYIKAN DI MOBILE: hidden md:block)
+          ========================================================= */}
+      <div className="w-full bg-slate-100/60 border-b border-gray-200 py-6 select-none hidden md:block">
         <div className="max-w-[1200px] w-full mx-auto flex justify-center px-4">
           {midBannerData && bannerImgSrc ? (
             <div className="w-full bg-white p-2 md:p-2.5 rounded-2xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.18)] transition-all duration-300">
@@ -224,7 +317,7 @@ export default function Header() {
       </div>
 
       {/* =========================================================
-          BARIS 3: NAVIGASI KATEGORI UTAMA (NON-STICKY)
+          BARIS 3: NAVIGASI KATEGORI UTAMA (DESKTOP)
           ========================================================= */}
       <nav className="w-full bg-white border-b border-gray-200 hidden md:block select-none">
         <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-between h-11 relative">
