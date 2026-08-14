@@ -130,29 +130,33 @@ export default function Header() {
           BARIS 1: HEADER UTAMA (STICKY TOP SEPANJANG SCROLL HALAMAN)
           ========================================================= */}
       <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-40 shadow-xs select-none">
-        <div className="flex flex-col md:flex-row md:items-center justify-between px-4 py-2.5 max-w-[1200px] mx-auto gap-2 md:gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between px-3 sm:px-4 py-2 md:py-2.5 max-w-[1200px] mx-auto gap-2 md:gap-4">
           
-          {/* AREA LOGO & HAMBURGER */}
-          <div className="flex items-center justify-between md:justify-start gap-4 md:gap-5 w-full md:w-auto shrink-0">
-            <div className="flex items-center gap-3">
-              {/* Tombol Hamburger Aktif untuk Mobile */}
-              <button 
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="text-2xl text-gray-700 hover:text-[#0066ad] md:hidden focus:outline-none p-1 rounded-md active:bg-gray-100 transition-colors"
-                aria-label="Buka Menu"
-              >
-                <HiMenu />
-              </button>
-              
-              <Link href="/" className="flex items-center hover:opacity-95 transition-opacity">
-                <img 
-                  src="/images/logo-ponpes.png" 
-                  alt="Logo Pondok Pesantren Khoiro Ummah" 
-                  className="h-11 sm:h-12 md:h-13 lg:h-14 w-auto max-w-[240px] sm:max-w-[280px] md:max-w-[320px] object-contain cursor-pointer" 
-                />
-              </Link>
-            </div>
+          {/* AREA BARIS ATAS MOBILE: HAMBURGER - LOGO LEBAR - USER */}
+          <div className="flex items-center justify-between w-full md:w-auto md:justify-start gap-2 sm:gap-4 shrink-0">
             
+            {/* Tombol Hamburger Mobile */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="text-2xl text-gray-700 hover:text-[#0066ad] md:hidden focus:outline-none p-1.5 rounded-lg active:bg-gray-100 transition-colors shrink-0"
+              aria-label="Buka Menu"
+            >
+              <HiMenu />
+            </button>
+            
+            {/* Logo Utama: Mengisi space kosong dan dibuat besar & jelas */}
+            <Link 
+              href="/" 
+              className="flex-1 md:flex-initial flex items-center justify-center md:justify-start px-1 hover:opacity-95 transition-opacity"
+            >
+              <img 
+                src="/images/logo-ponpes.png" 
+                alt="Logo Pondok Pesantren Khoiro Ummah" 
+                className="h-12 sm:h-14 md:h-12 lg:h-13 w-full max-w-[280px] sm:max-w-[340px] md:max-w-[300px] object-contain cursor-pointer" 
+              />
+            </Link>
+            
+            {/* Info Tanggal Desktop */}
             <div className="text-[11px] md:text-xs text-gray-400 font-medium leading-tight hidden xl:block border-l border-gray-300 pl-4 py-0.5 font-sans">
               {date.line1}<br />{date.line2}
             </div>
@@ -160,7 +164,7 @@ export default function Header() {
             {/* Icon User Mobile -> Menuju https://pondokku.or.id/studio */}
             <a 
               href="https://pondokku.or.id/studio"
-              className="text-xl text-gray-600 hover:text-[#0066ad] transition-colors p-1.5 rounded-full hover:bg-gray-100 md:hidden"
+              className="text-xl text-gray-600 hover:text-[#0066ad] transition-colors p-1.5 rounded-lg hover:bg-gray-100 md:hidden shrink-0"
               title="Studio Sanity"
             >
               <FaRegUser />
@@ -213,27 +217,27 @@ export default function Header() {
       </header>
 
       {/* =========================================================
-          DRAWER MENU MOBILE MODERN & ELEGANT
+          DRAWER MENU MOBILE MODERN
           ========================================================= */}
       <div 
         className={`fixed inset-0 z-50 md:hidden transition-all duration-300 ${
           isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
-        {/* Backdrop gelap blur */}
+        {/* Backdrop blur */}
         <div 
           className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" 
           onClick={() => setIsMobileMenuOpen(false)}
         />
         
-        {/* Konten Menu Samping Slide-in */}
+        {/* Panel Samping */}
         <div 
           className={`relative w-[300px] max-w-[85%] bg-white h-full shadow-2xl z-10 flex flex-col justify-between transform transition-transform duration-300 ease-out ${
             isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          {/* Header Drawer dengan Gradien */}
-          <div className="bg-gradient-to-r from-[#004b80] to-[#0066ad] p-5 text-white">
+          {/* Header Drawer */}
+          <div className="bg-gradient-to-r from-[#004b80] to-[#0066ad] p-5 text-white shadow-sm">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <span className="text-[10px] tracking-widest uppercase font-bold text-blue-200">PORTAL RESMI</span>
@@ -249,7 +253,7 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Body Menu Utama */}
+          {/* Body Menu Drawer */}
           <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
             
             {/* Navigasi Utama */}
@@ -291,7 +295,7 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Quick Links Kilas */}
+            {/* Kilas Topik */}
             <div className="border-t border-gray-100 pt-3">
               <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider block px-2 mb-2">
                 Kilas Topik
@@ -321,7 +325,6 @@ export default function Header() {
               <FaRegUser className="text-xs" /> Masuk Studio Pesantren
             </a>
             
-            {/* Social media icons di footer mobile drawer */}
             <div className="flex items-center justify-center gap-4 text-gray-400 text-base pt-1">
               <a href="#" className="hover:text-red-600 transition-colors"><FaYoutube /></a>
               <a href="#" className="hover:text-blue-600 transition-colors"><FaFacebook /></a>
