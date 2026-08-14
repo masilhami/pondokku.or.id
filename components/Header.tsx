@@ -2,7 +2,6 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { FaSearch, FaYoutube, FaFacebook, FaInstagram, FaTwitter, FaTiktok, FaRegUser, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
-import { MdLiveTv } from 'react-icons/md';
 import { HiOutlineNewspaper, HiMenu } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -130,105 +129,98 @@ export default function Header() {
   return (
     <header className="w-full bg-white select-none relative">
       
-      {/* AREA 1: HEADER UTAMA & SLOT BANNER IKLAN */}
-      <div className="w-full bg-white">
-        {/* BARIS 1: HEADER UTAMA */}
-        <div className="border-b border-gray-100 bg-white py-1">
-          <div className="flex flex-col md:flex-row md:items-center justify-between px-4 py-2 max-w-[1200px] mx-auto gap-3 md:gap-4">
-            
-            {/* AREA LOGO (DIBESARKAN) */}
-            <div className="flex items-center justify-between md:justify-start gap-4 md:gap-5 w-full md:w-auto shrink-0">
-              <div className="flex items-center gap-3">
-                <HiMenu className="text-2xl text-gray-700 cursor-pointer md:hidden" />
-                <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-                  <img 
-                    src="/images/logo-sdn.png" 
-                    alt="Logo Pondok Pesantren Khoiro Ummah" 
-                    className="h-11 sm:h-13 md:h-16 lg:h-18 w-auto max-w-[220px] sm:max-w-[280px] md:max-w-[340px] object-contain cursor-pointer" 
-                  />
-                </Link>
-              </div>
-              <div className="text-[11px] md:text-xs text-gray-400 font-medium leading-tight hidden xl:block border-l border-gray-300 pl-4 py-0.5 font-sans">
-                {date.line1}<br />{date.line2}
-              </div>
-              <FaRegUser className="text-xl text-gray-600 cursor-pointer md:hidden" />
-            </div>
-            
-            {/* AREA PENCARIAN (DIRAMPINGKAN AGAR MUAT LEBIH BANYAK RUANG) */}
-            <div className="w-full md:w-[220px] lg:w-[280px] shrink-0">
-              <form onSubmit={handleSearchSubmit} className="relative w-full">
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari info pesantren..." 
-                  className="border border-gray-300 rounded-full py-1.5 pl-4 pr-9 text-xs w-full outline-none bg-gray-50/70 focus:bg-white focus:border-[#0066ad] transition-all" 
+      {/* BARIS 1: HEADER UTAMA (STICKY PADA AWAL SCROLL) */}
+      <div className="w-full border-b border-gray-100 bg-white sticky top-0 z-40 shadow-xs py-1">
+        <div className="flex flex-col md:flex-row md:items-center justify-between px-4 py-2 max-w-[1200px] mx-auto gap-3 md:gap-4">
+          
+          {/* AREA LOGO */}
+          <div className="flex items-center justify-between md:justify-start gap-4 md:gap-5 w-full md:w-auto shrink-0">
+            <div className="flex items-center gap-3">
+              <HiMenu className="text-2xl text-gray-700 cursor-pointer md:hidden" />
+              <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
+                <img 
+                  src="/images/logo-ponpes.png" 
+                  alt="Logo Pondok Pesantren Khoiro Ummah" 
+                  className="h-11 sm:h-13 md:h-16 lg:h-18 w-auto max-w-[220px] sm:max-w-[280px] md:max-w-[340px] object-contain cursor-pointer" 
                 />
-                <button 
-                  type="submit" 
-                  className="absolute right-3 top-2 text-gray-400 text-xs hover:text-[#0066ad] transition-colors"
-                  aria-label="Cari"
-                >
-                  <FaSearch />
-                </button>
-              </form>
-            </div>
-
-            {/* AREA SOSIAL MEDIA & LIVE */}
-            <div className="hidden md:flex items-center justify-end gap-4 lg:gap-5 text-gray-500 text-base shrink-0">
-              <Link href="/galeri" className="flex items-center gap-1.5 border border-gray-300 px-3.5 py-1 rounded-full text-[11px] font-bold text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors">
-                <MdLiveTv className="text-[#0066ad] text-sm animate-pulse" /> LIVE DOKUMENTASI
               </Link>
-              <div className="flex gap-3 lg:gap-4 text-gray-400 text-lg">
-                <a href="#" className="hover:text-red-600 cursor-pointer transition-colors"><FaYoutube /></a> 
-                <a href="#" className="hover:text-blue-600 cursor-pointer transition-colors"><FaFacebook /></a> 
-                <a href="#" className="hover:text-pink-600 cursor-pointer transition-colors"><FaInstagram /></a> 
-                <a href="#" className="hover:text-gray-800 cursor-pointer transition-colors"><FaTwitter /></a> 
-                <a href="#" className="hover:text-blue-500 cursor-pointer transition-colors"><HiOutlineNewspaper /></a> 
-                <a href="#" className="hover:text-black cursor-pointer transition-colors"><FaTiktok /></a>
-              </div>
-              <div className="border-l border-gray-200 pl-3">
-                <FaRegUser className="text-lg cursor-pointer text-gray-500 hover:text-gray-800 transition-colors" />
-              </div>
             </div>
-
+            <div className="text-[11px] md:text-xs text-gray-400 font-medium leading-tight hidden xl:block border-l border-gray-300 pl-4 py-0.5 font-sans">
+              {date.line1}<br />{date.line2}
+            </div>
+            <FaRegUser className="text-xl text-gray-600 cursor-pointer md:hidden" />
           </div>
-        </div>
-
-        {/* BARIS 2: SLOT MEGA BANNER IKLAN */}
-        <div className="w-full bg-slate-100/60 border-b border-gray-200 py-6">
-          <div className="max-w-[1200px] w-full mx-auto flex justify-center px-4">
-            {midBannerData && bannerImgSrc ? (
-              <div className="w-full bg-white p-2 md:p-2.5 rounded-2xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.18)] transition-all duration-300">
-                <a 
-                  href={midBannerData.linkUrl || "#"} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="block w-full max-h-[140px] overflow-hidden rounded-xl relative group"
-                >
-                  <img 
-                    src={bannerImgSrc} 
-                    alt="Top Banner" 
-                    className="w-full h-auto object-cover object-center max-h-[140px] group-hover:scale-[1.01] transition-transform duration-300" 
-                  />
-                  <span className="absolute top-2 right-2 bg-black/60 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider backdrop-blur-xs">
-                    Ads
-                  </span>
-                </a>
-              </div>
-            ) : (
-              /* PLACEHOLDER DENGAN SHADOW MERATA */
-              <div className="w-full bg-white p-2 md:p-2.5 rounded-2xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)]">
-                <div className="w-full h-[90px] md:h-[120px] bg-slate-50 rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 text-xs font-sans">
-                  <span className="font-bold tracking-wider text-[10px] text-gray-400">RUANG INFORMASI PENGUMUMAN UTAMA PESANTREN</span>
-                </div>
-              </div>
-            )}
+          
+          {/* AREA PENCARIAN */}
+          <div className="w-full md:w-[220px] lg:w-[280px] shrink-0">
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
+              <input 
+                type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Cari info pesantren..." 
+                className="border border-gray-300 rounded-full py-1.5 pl-4 pr-9 text-xs w-full outline-none bg-gray-50/70 focus:bg-white focus:border-[#0066ad] transition-all" 
+              />
+              <button 
+                type="submit" 
+                className="absolute right-3 top-2 text-gray-400 text-xs hover:text-[#0066ad] transition-colors"
+                aria-label="Cari"
+              >
+                <FaSearch />
+              </button>
+            </form>
           </div>
+
+          {/* AREA SOSIAL MEDIA (TOMBOL LIVE DOKUMENTASI TELAH DIHAPUS) */}
+          <div className="hidden md:flex items-center justify-end gap-4 lg:gap-5 text-gray-500 text-base shrink-0">
+            <div className="flex gap-3 lg:gap-4 text-gray-400 text-lg">
+              <a href="#" className="hover:text-red-600 cursor-pointer transition-colors"><FaYoutube /></a> 
+              <a href="#" className="hover:text-blue-600 cursor-pointer transition-colors"><FaFacebook /></a> 
+              <a href="#" className="hover:text-pink-600 cursor-pointer transition-colors"><FaInstagram /></a> 
+              <a href="#" className="hover:text-gray-800 cursor-pointer transition-colors"><FaTwitter /></a> 
+              <a href="#" className="hover:text-blue-500 cursor-pointer transition-colors"><HiOutlineNewspaper /></a> 
+              <a href="#" className="hover:text-black cursor-pointer transition-colors"><FaTiktok /></a>
+            </div>
+            <div className="border-l border-gray-200 pl-3">
+              <FaRegUser className="text-lg cursor-pointer text-gray-500 hover:text-gray-800 transition-colors" />
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* BARIS 3: NAVIGASI KATEGORI UTAMA */}
+      {/* BARIS 2: SLOT MEGA BANNER IKLAN */}
+      <div className="w-full bg-slate-100/60 border-b border-gray-200 py-6">
+        <div className="max-w-[1200px] w-full mx-auto flex justify-center px-4">
+          {midBannerData && bannerImgSrc ? (
+            <div className="w-full bg-white p-2 md:p-2.5 rounded-2xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgb(0,0,0,0.18)] transition-all duration-300">
+              <a 
+                href={midBannerData.linkUrl || "#"} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="block w-full max-h-[140px] overflow-hidden rounded-xl relative group"
+              >
+                <img 
+                  src={bannerImgSrc} 
+                  alt="Top Banner" 
+                  className="w-full h-auto object-cover object-center max-h-[140px] group-hover:scale-[1.01] transition-transform duration-300" 
+                />
+                <span className="absolute top-2 right-2 bg-black/60 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider backdrop-blur-xs">
+                  Ads
+                </span>
+              </a>
+            </div>
+          ) : (
+            <div className="w-full bg-white p-2 md:p-2.5 rounded-2xl border border-slate-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.1)]">
+              <div className="w-full h-[90px] md:h-[120px] bg-slate-50 rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 text-xs font-sans">
+                <span className="font-bold tracking-wider text-[10px] text-gray-400">RUANG INFORMASI PENGUMUMAN UTAMA PESANTREN</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* BARIS 3: NAVIGASI KATEGORI UTAMA (STICKY SAMPAI SCROLL TERAKHIR) */}
       <div className="w-full bg-white border-b border-gray-200 hidden md:block sticky top-0 z-50 shadow-xs">
         <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-between h-11 relative">
           
@@ -237,7 +229,7 @@ export default function Header() {
             <span>KU</span>
           </div>
           
-          {/* Loop Menu Utama Menggunakan Komponen Link Bawaan Next.js */}
+          {/* Loop Menu Utama */}
           <div 
             ref={categoriesRef}
             style={hideScrollbarStyle}
@@ -286,7 +278,7 @@ export default function Header() {
         <div className="max-w-[1200px] mx-auto px-4 flex items-center h-8 text-[11px] font-sans tracking-wide py-1 relative">
           <span className="font-extrabold text-gray-800 uppercase shrink-0 mr-4 border-r border-gray-300 pr-4 z-10 bg-white">KILAS</span>
           
-          {/* Loop Menu Sub-Kilas Menggunakan Komponen Link */}
+          {/* Loop Menu Sub-Kilas */}
           <div 
             style={hideScrollbarStyle}
             className="flex-1 flex gap-5 text-gray-600 items-center font-medium overflow-x-auto [&::-webkit-scrollbar]:hidden"
