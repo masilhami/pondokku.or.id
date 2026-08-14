@@ -6,7 +6,7 @@ import {
   FaRegUser, FaAngleLeft, FaAngleRight, FaTimes, FaHome, FaUniversity, 
   FaBullhorn, FaBookOpen, FaImages, FaPhoneAlt, FaCalendarAlt, FaAward, FaChevronRight 
 } from 'react-icons/fa';
-import { HiOutlineNewspaper, HiMenu } from 'react-icons/hi';
+import { HiOutlineNewspaper, HiMenuAlt1 } from 'react-icons/hi';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { client, urlFor } from "@/lib/sanity";
@@ -43,7 +43,7 @@ export default function Header() {
   const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // =========================================================
-  // DATA LINK BARIS MENU UTAMA DENGAN IKON UNTUK MOBILE DRAWER
+  // DATA LINK BARIS MENU UTAMA
   // =========================================================
   const categories = [
     { name: "Beranda", href: "/", icon: <FaHome /> },
@@ -62,10 +62,10 @@ export default function Header() {
   // =========================================================
   const kilasDaerah = [
     { name: "Tahfidzul Qur'an", href: "/search?q=tahfidz" },
-    { name: "Pendaftaran Santri Baru (PSB)", href: "/search?q=psb" },
+    { name: "Pendaftaran PSB", href: "/search?q=psb" },
     { name: "Dirasah Islamiyah", href: "/search?q=dirasah" },
     { name: "Kajian Sunnah", href: "/search?q=kajian" },
-    { name: "Info Salem & Brebes", href: "/search?q=brebes" }
+    { name: "Salem & Brebes", href: "/search?q=brebes" }
   ];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -127,63 +127,63 @@ export default function Header() {
   return (
     <>
       {/* =========================================================
-          BARIS 1: HEADER UTAMA (STICKY TOP SEPANJANG SCROLL HALAMAN)
+          BARIS 1: HEADER UTAMA (STICKY TOP DENGAN DESAIN MODERN)
           ========================================================= */}
-      <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-40 shadow-xs select-none">
-        <div className="flex flex-col md:flex-row md:items-center justify-between px-3 sm:px-4 py-2 md:py-2.5 max-w-[1200px] mx-auto gap-2 md:gap-4">
+      <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-40 shadow-[0_2px_15px_rgba(0,0,0,0.04)] select-none">
+        <div className="flex flex-col md:flex-row md:items-center justify-between px-3 sm:px-5 py-2 md:py-2.5 max-w-[1200px] mx-auto gap-2 md:gap-4">
           
-          {/* AREA BARIS ATAS MOBILE: HAMBURGER - LOGO LEBAR - USER */}
+          {/* BARIS UTAMA MOBILE & DESKTOP BRANDING */}
           <div className="flex items-center justify-between w-full md:w-auto md:justify-start gap-2 sm:gap-4 shrink-0">
             
-            {/* Tombol Hamburger Mobile */}
+            {/* Tombol Hamburger Mobile Bergaya Modern Soft-Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="text-2xl text-gray-700 hover:text-[#0066ad] md:hidden focus:outline-none p-1.5 rounded-lg active:bg-gray-100 transition-colors shrink-0"
+              className="w-10 h-10 flex items-center justify-center text-slate-700 hover:text-[#0066ad] bg-slate-100/80 hover:bg-blue-50 active:scale-95 md:hidden rounded-xl transition-all shadow-2xs shrink-0"
               aria-label="Buka Menu"
             >
-              <HiMenu />
+              <HiMenuAlt1 className="text-xl" />
             </button>
             
-            {/* Logo Utama: Mengisi space kosong dan dibuat besar & jelas */}
+            {/* Logo Utama: Dibuat tegas, proporsional, dan mengisi area header */}
             <Link 
               href="/" 
-              className="flex-1 md:flex-initial flex items-center justify-center md:justify-start px-1 hover:opacity-95 transition-opacity"
+              className="flex-1 md:flex-initial flex items-center justify-center md:justify-start px-2 hover:opacity-90 transition-opacity"
             >
               <img 
                 src="/images/logo-ponpes.png" 
                 alt="Logo Pondok Pesantren Khoiro Ummah" 
-                className="h-12 sm:h-14 md:h-12 lg:h-13 w-full max-w-[280px] sm:max-w-[340px] md:max-w-[300px] object-contain cursor-pointer" 
+                className="h-11 sm:h-12 md:h-12 lg:h-13 w-auto max-w-[240px] sm:max-w-[300px] md:max-w-[320px] object-contain cursor-pointer drop-shadow-2xs" 
               />
             </Link>
             
-            {/* Info Tanggal Desktop */}
-            <div className="text-[11px] md:text-xs text-gray-400 font-medium leading-tight hidden xl:block border-l border-gray-300 pl-4 py-0.5 font-sans">
+            {/* Tanggal Hari Ini (Desktop View) */}
+            <div className="text-[11px] md:text-xs text-slate-400 font-medium leading-tight hidden xl:block border-l border-slate-200 pl-4 py-0.5 font-sans">
               {date.line1}<br />{date.line2}
             </div>
 
-            {/* Icon User Mobile -> Menuju https://pondokku.or.id/studio */}
+            {/* Icon User Mobile: Tautan ke Studio */}
             <a 
               href="https://pondokku.or.id/studio"
-              className="text-xl text-gray-600 hover:text-[#0066ad] transition-colors p-1.5 rounded-lg hover:bg-gray-100 md:hidden shrink-0"
+              className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-[#0066ad] bg-slate-100/80 hover:bg-blue-50 active:scale-95 rounded-xl transition-all md:hidden shrink-0 shadow-2xs"
               title="Studio Sanity"
             >
-              <FaRegUser />
+              <FaRegUser className="text-sm" />
             </a>
           </div>
           
-          {/* AREA PENCARIAN */}
-          <div className="w-full md:w-[220px] lg:w-[260px] shrink-0">
+          {/* SEARCH BAR (MODERN CAPSULE STYLE) */}
+          <div className="w-full md:w-[230px] lg:w-[280px] shrink-0">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <input 
                 type="text" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari info pesantren..." 
-                className="border border-gray-300 rounded-full py-1.5 pl-4 pr-9 text-xs w-full outline-none bg-gray-50 focus:bg-white focus:border-[#0066ad] transition-all shadow-2xs" 
+                className="border border-slate-200/90 rounded-full py-1.5 md:py-2 pl-4 pr-10 text-xs w-full outline-none bg-slate-50/70 focus:bg-white focus:border-[#0066ad] focus:ring-2 focus:ring-[#0066ad]/10 transition-all text-slate-700 placeholder:text-slate-400" 
               />
               <button 
                 type="submit" 
-                className="absolute right-3 top-2 text-gray-400 text-xs hover:text-[#0066ad] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#0066ad] text-xs transition-colors p-1"
                 aria-label="Cari"
               >
                 <FaSearch />
@@ -191,75 +191,106 @@ export default function Header() {
             </form>
           </div>
 
-          {/* AREA SOSIAL MEDIA & USER DESKTOP */}
-          <div className="hidden md:flex items-center justify-end gap-3 lg:gap-4 text-gray-500 text-base shrink-0">
-            <div className="flex gap-3 text-gray-400 text-lg">
-              <a href="#" className="hover:text-red-600 cursor-pointer transition-colors"><FaYoutube /></a> 
-              <a href="#" className="hover:text-blue-600 cursor-pointer transition-colors"><FaFacebook /></a> 
-              <a href="#" className="hover:text-pink-600 cursor-pointer transition-colors"><FaInstagram /></a> 
-              <a href="#" className="hover:text-gray-800 cursor-pointer transition-colors"><FaTwitter /></a> 
-              <a href="#" className="hover:text-blue-500 cursor-pointer transition-colors"><HiOutlineNewspaper /></a> 
-              <a href="#" className="hover:text-black cursor-pointer transition-colors"><FaTiktok /></a>
+          {/* SOSIAL MEDIA & STUDIO LINK (DESKTOP ONLY) */}
+          <div className="hidden md:flex items-center justify-end gap-3 lg:gap-4 text-slate-500 text-base shrink-0">
+            <div className="flex gap-3 text-slate-400 text-lg">
+              <a href="#" className="hover:text-red-600 transition-colors"><FaYoutube /></a> 
+              <a href="#" className="hover:text-blue-600 transition-colors"><FaFacebook /></a> 
+              <a href="#" className="hover:text-pink-600 transition-colors"><FaInstagram /></a> 
+              <a href="#" className="hover:text-gray-800 transition-colors"><FaTwitter /></a> 
+              <a href="#" className="hover:text-blue-500 transition-colors"><HiOutlineNewspaper /></a> 
+              <a href="#" className="hover:text-black transition-colors"><FaTiktok /></a>
             </div>
             
-            <div className="border-l border-gray-200 pl-3">
+            <div className="border-l border-slate-200 pl-3">
               <a 
                 href="https://pondokku.or.id/studio"
-                className="text-lg cursor-pointer text-gray-500 hover:text-[#0066ad] transition-colors block"
+                className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#0066ad] bg-slate-100 hover:bg-blue-50 px-3 py-1.5 rounded-full transition-all border border-slate-200/60"
                 title="Studio Sanity"
               >
-                <FaRegUser />
+                <FaRegUser className="text-[11px]" />
+                <span>Studio</span>
               </a>
             </div>
           </div>
 
         </div>
+
+        {/* Akses Cepat Kilas Mini (Khusus Tampilan Mobile di Bawah Search) */}
+        <div className="md:hidden w-full border-t border-slate-100 bg-slate-50/50 py-1.5 px-3 overflow-x-auto" style={hideScrollbarStyle}>
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            <span className="text-[9px] font-black tracking-wider uppercase bg-[#0066ad] text-white px-2 py-0.5 rounded-md shrink-0">
+              KILAS
+            </span>
+            {kilasDaerah.map((item, idx) => (
+              <Link 
+                key={idx} 
+                href={item.href} 
+                className="text-[10px] font-semibold text-slate-600 hover:text-[#0066ad] bg-white border border-slate-200/80 px-2.5 py-0.5 rounded-full shadow-3xs"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </div>
       </header>
 
       {/* =========================================================
-          DRAWER MENU MOBILE MODERN
+          DRAWER MENU MOBILE DENGAN DESAIN MODERN & ELEGAN
           ========================================================= */}
       <div 
         className={`fixed inset-0 z-50 md:hidden transition-all duration-300 ${
           isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
-        {/* Backdrop blur */}
+        {/* Backdrop Dark Blur */}
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity" 
+          className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity duration-300" 
           onClick={() => setIsMobileMenuOpen(false)}
         />
         
-        {/* Panel Samping */}
+        {/* Konten Menu Samping Sliding Drawer */}
         <div 
-          className={`relative w-[300px] max-w-[85%] bg-white h-full shadow-2xl z-10 flex flex-col justify-between transform transition-transform duration-300 ease-out ${
+          className={`relative w-[310px] max-w-[85%] bg-white h-full shadow-[0_0_50px_rgba(0,0,0,0.2)] z-10 flex flex-col justify-between transform transition-transform duration-300 ease-out ${
             isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          {/* Header Drawer */}
-          <div className="bg-gradient-to-r from-[#004b80] to-[#0066ad] p-5 text-white shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <span className="text-[10px] tracking-widest uppercase font-bold text-blue-200">PORTAL RESMI</span>
-                <h3 className="font-extrabold text-sm tracking-tight text-white">Khoiro Ummah Salem</h3>
+          {/* Header Drawer Bergaya Card Gradient */}
+          <div className="p-5 bg-gradient-to-br from-[#003861] via-[#004f85] to-[#0066ad] text-white relative overflow-hidden">
+            <div className="absolute right-0 bottom-0 opacity-10 translate-x-4 translate-y-4">
+              <FaUniversity className="text-8xl" />
+            </div>
+            
+            <div className="flex items-center justify-between relative z-10">
+              <div className="space-y-1">
+                <span className="text-[9px] uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-full font-bold">
+                  PORTAL RESMI
+                </span>
+                <h3 className="font-black text-base tracking-tight leading-tight mt-1 text-white">
+                  Khoiro Ummah Salem
+                </h3>
+                <p className="text-[11px] text-blue-100/80 font-medium">
+                  Bentar, Salem, Brebes, Jawa Tengah
+                </p>
               </div>
+              
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+                className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 active:scale-90 flex items-center justify-center text-white transition-all shrink-0"
                 aria-label="Tutup Menu"
               >
-                <FaTimes className="text-sm" />
+                <FaTimes className="text-xs" />
               </button>
             </div>
           </div>
 
-          {/* Body Menu Drawer */}
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+          {/* Body Menu Utama */}
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5" style={hideScrollbarStyle}>
             
-            {/* Navigasi Utama */}
+            {/* List Navigasi Utama */}
             <div>
-              <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider block px-2 mb-2">
-                Navigasi Utama
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block px-2 mb-2">
+                Menu Utama
               </span>
               <div className="space-y-1">
                 {categories.map((cat, idx) => (
@@ -267,38 +298,38 @@ export default function Header() {
                     key={idx} 
                     href={cat.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-700 hover:text-[#0066ad] hover:bg-blue-50/70 transition-all group"
+                    className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:text-[#0066ad] hover:bg-blue-50/80 active:bg-blue-100/70 transition-all group"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-gray-400 group-hover:text-[#0066ad] transition-colors text-sm">
+                      <span className="text-slate-400 group-hover:text-[#0066ad] text-sm transition-colors">
                         {cat.icon}
                       </span>
                       <span>{cat.name}</span>
                     </div>
-                    <FaChevronRight className="text-[10px] text-gray-300 group-hover:text-[#0066ad] transition-transform group-hover:translate-x-0.5" />
+                    <FaChevronRight className="text-[10px] text-slate-300 group-hover:text-[#0066ad] transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 ))}
                 
                 <Link 
                   href="/agenda"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-gray-700 hover:text-[#0066ad] hover:bg-blue-50/70 transition-all group"
+                  className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:text-[#0066ad] hover:bg-blue-50/80 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-gray-400 group-hover:text-[#0066ad] transition-colors text-sm">
+                    <span className="text-slate-400 group-hover:text-[#0066ad] text-sm transition-colors">
                       <FaCalendarAlt />
                     </span>
                     <span>Agenda Pesantren</span>
                   </div>
-                  <FaChevronRight className="text-[10px] text-gray-300 group-hover:text-[#0066ad]" />
+                  <FaChevronRight className="text-[10px] text-slate-300 group-hover:text-[#0066ad]" />
                 </Link>
               </div>
             </div>
 
-            {/* Kilas Topik */}
-            <div className="border-t border-gray-100 pt-3">
-              <span className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider block px-2 mb-2">
-                Kilas Topik
+            {/* List Kilas Warta */}
+            <div className="border-t border-slate-100 pt-3">
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block px-2 mb-2">
+                Kategori Cepat
               </span>
               <div className="flex flex-wrap gap-1.5 px-1">
                 {kilasDaerah.map((item, idx) => (
@@ -306,7 +337,7 @@ export default function Header() {
                     key={idx}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="text-[11px] font-medium bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-[#0066ad] px-2.5 py-1 rounded-full transition-colors"
+                    className="text-[11px] font-semibold bg-slate-100 hover:bg-blue-100 hover:text-[#0066ad] text-slate-600 px-3 py-1 rounded-lg transition-colors shadow-3xs"
                   >
                     {item.name}
                   </Link>
@@ -317,31 +348,32 @@ export default function Header() {
           </div>
 
           {/* Footer Drawer */}
-          <div className="p-4 bg-slate-50 border-t border-gray-100 space-y-3">
+          <div className="p-4 bg-slate-50 border-t border-slate-100 space-y-3">
             <a 
               href="https://pondokku.or.id/studio"
-              className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#0066ad] text-white text-xs font-bold rounded-xl shadow-sm hover:bg-[#004f87] transition-all"
+              className="flex items-center justify-center gap-2 w-full py-2.5 bg-gradient-to-r from-[#0066ad] to-[#004b80] text-white text-xs font-extrabold rounded-xl shadow-md hover:shadow-lg active:scale-98 transition-all"
             >
               <FaRegUser className="text-xs" /> Masuk Studio Pesantren
             </a>
             
-            <div className="flex items-center justify-center gap-4 text-gray-400 text-base pt-1">
+            {/* Sosmed Icon Drawer */}
+            <div className="flex items-center justify-center gap-4 text-slate-400 text-base pt-1">
               <a href="#" className="hover:text-red-600 transition-colors"><FaYoutube /></a>
               <a href="#" className="hover:text-blue-600 transition-colors"><FaFacebook /></a>
               <a href="#" className="hover:text-pink-600 transition-colors"><FaInstagram /></a>
-              <a href="#" className="hover:text-gray-800 transition-colors"><FaTwitter /></a>
+              <a href="#" className="hover:text-slate-800 transition-colors"><FaTwitter /></a>
               <a href="#" className="hover:text-black transition-colors"><FaTiktok /></a>
             </div>
             
-            <div className="text-center text-[10px] text-gray-400 font-medium">
-              www.pondokku.or.id • Salem, Brebes
+            <div className="text-center text-[10px] text-slate-400 font-medium">
+              www.pondokku.or.id • Khoiro Ummah Salem
             </div>
           </div>
         </div>
       </div>
 
       {/* =========================================================
-          BARIS 2: SLOT MEGA BANNER IKLAN (TERSEMBUNYI TOTAL DI MOBILE)
+          BARIS 2: SLOT MEGA BANNER IKLAN (HIDDEN DI MOBILE)
           ========================================================= */}
       <div className="w-full bg-slate-100/60 border-b border-gray-200 py-6 select-none hidden md:block">
         <div className="max-w-[1200px] w-full mx-auto flex justify-center px-4">
@@ -374,7 +406,7 @@ export default function Header() {
       </div>
 
       {/* =========================================================
-          BARIS 3: NAVIGASI KATEGORI UTAMA (DESKTOP)
+          BARIS 3: NAVIGASI KATEGORI UTAMA (DESKTOP VIEW)
           ========================================================= */}
       <nav className="w-full bg-white border-b border-gray-200 hidden md:block select-none">
         <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-between h-11 relative">
@@ -429,7 +461,7 @@ export default function Header() {
       </nav>
 
       {/* =========================================================
-          LAPISAN B: Jalur Teks KILAS Berita Pesantren
+          LAPISAN B: Jalur Teks KILAS Berita Pesantren (DESKTOP)
           ========================================================= */}
       <div className="w-full bg-white border-b border-gray-200 hidden md:block select-none">
         <div className="max-w-[1200px] mx-auto px-4 flex items-center h-8 text-[11px] font-sans tracking-wide py-1 relative">
