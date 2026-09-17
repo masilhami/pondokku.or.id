@@ -7,7 +7,7 @@ export default defineConfig({
   name: 'default',
   title: 'Tribun CMS Studio',
 
-  projectId: 'ww6prabc', // ID project Sanity lu
+  projectId: '49hcvicd', // ID project Sanity lu
   dataset: 'production',
 
   plugins: [deskTool()],
