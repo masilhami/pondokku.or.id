@@ -7,55 +7,66 @@ import {
 } from '@sanity/image-url';
 
 // =========================================================
-// KONFIGURASI UTAMA SANITY
+// 1. KONFIGURASI UTAMA SANITY PONDOKKU.OR.ID
 // =========================================================
 
 /**
- * Project ID dan dataset boleh menggunakan NEXT_PUBLIC_
- * karena dua nilai ini BUKAN rahasia.
+ * Project Sanity khusus pondokku.or.id
  *
- * Fallback dipakai supaya build tetap berjalan apabila
- * environment variable belum dibuat.
+ * Project ID:
+ * 49hcvicd
+ *
+ * Project ID bukan data rahasia, jadi aman ditulis langsung.
+ *
+ * Sengaja TIDAK menggunakan:
+ *
+ * process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+ *
+ * agar website ini tidak secara tidak sengaja terhubung
+ * ke project Sanity website lain akibat ENV Vercel lama.
  */
-export const projectId =
-  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'ww6prabc';
+export const projectId = '49hcvicd';
 
-export const dataset =
-  process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+export const dataset = 'production';
 
 /**
- * API version dibuat tetap agar perubahan API Sanity
- * di masa depan tidak tiba-tiba mengubah perilaku aplikasi.
+ * Sanity API Version.
+ *
+ * Gunakan tanggal tetap agar behavior API tidak berubah
+ * secara tiba-tiba di masa depan.
  */
 export const apiVersion = '2026-09-17';
 
 // =========================================================
-// 1. CLIENT UNTUK MEMBACA DATA PUBLIK
+// 2. CLIENT PUBLIK / READ ONLY
 // =========================================================
 
 /**
- * Client ini digunakan untuk:
+ * Client utama untuk membaca data website.
  *
- * - halaman utama
- * - berita
- * - prestasi
- * - slideshow
- * - iklan
- * - kategori
+ * Digunakan untuk:
+ *
+ * - Berita
+ * - Topik pilihan
+ * - Prestasi siswa
+ * - Slideshow
+ * - Iklan
+ * - Kategori
+ * - Halaman utama
  * - Server Component
+ * - API GET
  * - generateMetadata
- * - build / prerender Next.js
+ * - proses build Next.js
  *
  * PENTING:
- * Client ini TIDAK memakai token.
  *
- * Jangan masukkan SANITY_API_WRITE_TOKEN ke client ini.
- * Ini mencegah masalah:
+ * Client ini TIDAK menggunakan token.
  *
- * Unauthorized - Session does not match project host
+ * Dengan demikian query publik tidak akan mengalami error:
  *
- * jika token yang tersimpan ternyata berasal dari project
- * Sanity yang berbeda.
+ * "Unauthorized - Session does not match project host"
+ *
+ * akibat token milik project Sanity lain.
  */
 export const client = createClient({
   projectId,
@@ -63,92 +74,85 @@ export const client = createClient({
   apiVersion,
 
   /**
-   * false = selalu mengambil data terbaru langsung
-   * dari Content Lake.
+   * false:
+   * mengambil data terbaru langsung dari Sanity Content Lake.
    *
-   * Cocok untuk portal berita / website sekolah yang ingin
-   * konten baru langsung muncul setelah publish.
+   * Sangat cocok untuk website yang kontennya sering diperbarui.
    */
   useCdn: false,
 
   /**
-   * Website publik hanya membaca konten yang sudah Publish.
-   * Draft tidak akan ikut tampil.
+   * Hanya mengambil dokumen yang sudah dipublish.
+   *
+   * Draft tidak ditampilkan ke website publik.
    */
   perspective: 'published',
 });
 
 // =========================================================
-// 2. CLIENT KHUSUS UNTUK WRITE / MUTATION
+// 3. CLIENT WRITE / MUTATION
 // =========================================================
 
 /**
- * Gunakan client ini HANYA di server:
+ * Gunakan fungsi ini HANYA untuk proses server-side:
  *
  * - app/api/.../route.ts
- * - Server Action
  * - webhook
- * - cron server-side
+ * - Server Action
+ * - Cron
+ * - patch()
+ * - create()
+ * - delete()
  *
- * JANGAN import writeClient ke Client Component.
+ * Jangan digunakan di Client Component.
  *
- * Token HARUS:
+ * Environment variable:
  *
  * SANITY_API_WRITE_TOKEN
  *
- * JANGAN:
+ * Token HARUS dibuat dari Sanity project:
+ *
+ * 49hcvicd
+ *
+ * Jangan menggunakan:
  *
  * NEXT_PUBLIC_SANITY_API_WRITE_TOKEN
  */
-export const writeClient = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-  perspective: 'published',
-
-  /**
-   * Private environment variable.
-   * Jangan pernah menggunakan NEXT_PUBLIC_.
-   */
-  token: process.env.SANITY_API_WRITE_TOKEN,
-});
-
-// =========================================================
-// 3. HELPER VALIDASI WRITE TOKEN
-// =========================================================
-
-/**
- * Gunakan helper ini apabila Anda ingin memastikan
- * mutation tidak berjalan tanpa token.
- *
- * Contoh:
- *
- * const sanity = getWriteClient();
- *
- * await sanity
- *   .patch(id)
- *   .set({ views: 10 })
- *   .commit();
- */
 export function getWriteClient() {
+  // -------------------------------------------------------
+  // Proteksi agar write client tidak dijalankan di browser
+  // -------------------------------------------------------
+
   if (typeof window !== 'undefined') {
     throw new Error(
-      'getWriteClient() hanya boleh digunakan di server.'
+      'Sanity write client hanya boleh digunakan di server.'
     );
   }
+
+  // -------------------------------------------------------
+  // Ambil private token
+  // -------------------------------------------------------
 
   const token = process.env.SANITY_API_WRITE_TOKEN;
 
   if (!token) {
     throw new Error(
-      'SANITY_API_WRITE_TOKEN belum tersedia di environment variable.'
+      'SANITY_API_WRITE_TOKEN belum tersedia. ' +
+        'Tambahkan token Sanity project 49hcvicd ke Environment Variables.'
     );
   }
 
-  return client.withConfig({
-    token,
+  // -------------------------------------------------------
+  // Buat client khusus mutation
+  // -------------------------------------------------------
+
+  return createClient({
+    projectId,
+    dataset,
+    apiVersion,
     useCdn: false,
+    token,
+    perspective: 'published',
   });
 }
 
@@ -157,18 +161,26 @@ export function getWriteClient() {
 // =========================================================
 
 /**
- * @sanity/image-url versi terbaru menggunakan:
+ * Sanity versi baru menggunakan named export:
  *
  * createImageUrlBuilder
  *
- * bukan lagi:
+ * Bukan lagi:
  *
  * import imageUrlBuilder from '@sanity/image-url'
+ *
+ * sehingga warning:
+ *
+ * "The default export of @sanity/image-url has been deprecated"
+ *
+ * tidak muncul lagi.
  */
-const builder = createImageUrlBuilder(client);
+const imageBuilder = createImageUrlBuilder(client);
 
 /**
- * Contoh penggunaan:
+ * Helper untuk membuat URL gambar Sanity.
+ *
+ * Contoh:
  *
  * urlFor(post.mainImage)
  *   .width(800)
@@ -177,13 +189,17 @@ const builder = createImageUrlBuilder(client);
  *   .url()
  */
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
+  return imageBuilder.image(source);
 }
 
 // =========================================================
 // 5. QUERY BERITA HALAMAN UTAMA
 // =========================================================
 
+/**
+ * Mengambil seluruh berita dari tipe "post"
+ * dan mengurutkannya berdasarkan publishedAt terbaru.
+ */
 export const indexQuery = `
   *[
     _type == "post"
@@ -204,13 +220,18 @@ export const indexQuery = `
 // 6. QUERY DETAIL BERITA
 // =========================================================
 
+/**
+ * Mengambil satu berita berdasarkan slug.
+ */
 export const postDetailQuery = `
   *[
     _type == "post" &&
     slug.current == $slug
   ][0] {
     _id,
+
     title,
+
     "slug": slug.current,
 
     category->{
@@ -220,11 +241,17 @@ export const postDetailQuery = `
     },
 
     publishedAt,
+
     author,
+
     editor,
+
     mainImage,
+
     youtubeUrl,
+
     summary,
+
     body
   }
 `;
@@ -233,12 +260,21 @@ export const postDetailQuery = `
 // 7. QUERY TOPIK PILIHAN / HIGHLIGHT
 // =========================================================
 
+/**
+ * Mengambil kategori yang memiliki:
+ *
+ * isHighlight == true
+ *
+ * kemudian mengambil dua berita terbaru di dalamnya.
+ */
 export const highlightCategoryQuery = `
   *[
     _type == "category" &&
     isHighlight == true
   ][0] {
+
     _id,
+
     title,
 
     "posts":
@@ -247,11 +283,17 @@ export const highlightCategoryQuery = `
         references(^._id)
       ]
       | order(publishedAt desc)[0..1] {
+
         _id,
+
         title,
+
         "slug": slug.current,
+
         publishedAt,
+
         mainImage,
+
         youtubeUrl
       }
   }
@@ -262,25 +304,36 @@ export const highlightCategoryQuery = `
 // =========================================================
 
 /**
- * Tidak perlu:
+ * Mengambil iklan berdasarkan placement.
  *
- * placement == "drafts." + $placement
+ * Contoh placement:
  *
- * karena "drafts." adalah prefix _id dokumen,
- * bukan isi field placement.
+ * left
+ * center
+ * right
+ * 300x600
  *
- * Client publik menggunakan perspective: "published",
- * jadi hanya iklan yang sudah Publish yang ditampilkan.
+ * Tidak perlu mencari:
+ *
+ * "drafts." + $placement
+ *
+ * karena drafts. adalah prefix _id Sanity,
+ * bukan nilai dari field placement.
  */
 export const adsQuery = `
   *[
     _type == "iklan" &&
     placement == $placement
   ][0] {
+
     _id,
+
     title,
+
     image,
+
     linkUrl,
+
     placement
   }
 `;
@@ -289,16 +342,24 @@ export const adsQuery = `
 // 9. QUERY SLIDESHOW
 // =========================================================
 
+/**
+ * Hanya slideshow aktif yang ditampilkan.
+ */
 export const slideshowQuery = `
   *[
     _type == "slideshow" &&
     isActive == true
   ]
   | order(order asc) {
+
     _id,
+
     title,
+
     image,
+
     linkUrl,
+
     order
   }
 `;
@@ -307,45 +368,78 @@ export const slideshowQuery = `
 // 10. QUERY POSTINGAN TERBARU
 // =========================================================
 
+/**
+ * Mengambil maksimal 10 berita terbaru.
+ *
+ * Range:
+ *
+ * [0..9]
+ *
+ * = 10 dokumen.
+ */
 export const terbaruQuery = `
   *[
     _type == "post"
   ]
   | order(publishedAt desc)[0..9] {
+
     _id,
+
     title,
+
     "slug": slug.current,
+
     publishedAt,
+
     author,
+
     mainImage,
+
     youtubeUrl,
+
     "categoryTitle": category->title
   }
 `;
 
 // =========================================================
-// 11. QUERY PRESTASI SISWA
+// 11. QUERY SEMUA PRESTASI SISWA
 // =========================================================
 
 /**
- * Sesuai schema:
+ * Sesuai dengan schema:
  *
  * sanity/schemaTypes/prestasi.ts
+ *
+ * Prestasi terbaru tampil paling atas.
  */
 export const prestasiQuery = `
   *[
     _type == "prestasi"
   ]
   | order(tanggalLomba desc) {
+
     _id,
+
     jenisLomba,
+
     juaraLomba,
+
     namaSiswa,
+
     tanggalLomba,
 
     foto {
       ...,
-      asset->
+
+      asset->{
+        _id,
+        url,
+
+        metadata {
+          dimensions,
+          lqip
+        }
+      }
     },
 
     deskripsi
@@ -353,23 +447,40 @@ export const prestasiQuery = `
 `;
 
 // =========================================================
-// 12. QUERY DETAIL PRESTASI BERDASARKAN ID
+// 12. QUERY DETAIL PRESTASI
 // =========================================================
 
+/**
+ * Mengambil satu prestasi berdasarkan Sanity Document ID.
+ */
 export const prestasiDetailQuery = `
   *[
     _type == "prestasi" &&
     _id == $id
   ][0] {
+
     _id,
+
     jenisLomba,
+
     juaraLomba,
+
     namaSiswa,
+
     tanggalLomba,
 
     foto {
       ...,
-      asset->
+
+      asset->{
+        _id,
+        url,
+
+        metadata {
+          dimensions,
+          lqip
+        }
+      }
     },
 
     deskripsi
@@ -380,17 +491,43 @@ export const prestasiDetailQuery = `
 // 13. QUERY PRESTASI TERBARU
 // =========================================================
 
+/**
+ * Mengambil maksimal 6 prestasi terbaru.
+ *
+ * [0..5] = 6 dokumen.
+ *
+ * Cocok untuk widget prestasi di homepage.
+ */
 export const prestasiTerbaruQuery = `
   *[
     _type == "prestasi"
   ]
   | order(tanggalLomba desc)[0..5] {
+
     _id,
+
     jenisLomba,
+
     juaraLomba,
+
     namaSiswa,
+
     tanggalLomba,
-    foto,
+
+    foto {
+      ...,
+
+      asset->{
+        _id,
+        url,
+
+        metadata {
+          dimensions,
+          lqip
+        }
+      }
+    },
+
     deskripsi
   }
 `;
