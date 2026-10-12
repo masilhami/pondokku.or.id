@@ -1,158 +1,66 @@
 // lib/sanity.ts
 
 import { createClient } from '@sanity/client';
+
 import {
   createImageUrlBuilder,
   type SanityImageSource,
 } from '@sanity/image-url';
 
 // =========================================================
-// 1. KONFIGURASI UTAMA SANITY PONDOKKU.OR.ID
+// 1. KONFIGURASI SANITY PONDOKKU.OR.ID
 // =========================================================
 
-/**
- * Project Sanity khusus pondokku.or.id
- *
- * Project ID:
- * 49hcvicd
- *
- * Project ID bukan data rahasia, jadi aman ditulis langsung.
- *
- * Sengaja TIDAK menggunakan:
- *
- * process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
- *
- * agar website ini tidak secara tidak sengaja terhubung
- * ke project Sanity website lain akibat ENV Vercel lama.
- */
+// Tetap memakai project khusus website ini.
 export const projectId = '49hcvicd';
-
 export const dataset = 'production';
-
-/**
- * Sanity API Version.
- *
- * Gunakan tanggal tetap agar behavior API tidak berubah
- * secara tiba-tiba di masa depan.
- */
 export const apiVersion = '2026-09-17';
 
 // =========================================================
-// 2. CLIENT PUBLIK / READ ONLY
+// 2. CLIENT PUBLIK
 // =========================================================
 
-/**
- * Client utama untuk membaca data website.
- *
- * Digunakan untuk:
- *
- * - Berita
- * - Topik pilihan
- * - Prestasi siswa
- * - Slideshow
- * - Iklan
- * - Kategori
- * - Halaman utama
- * - Server Component
- * - API GET
- * - generateMetadata
- * - proses build Next.js
- *
- * PENTING:
- *
- * Client ini TIDAK menggunakan token.
- *
- * Dengan demikian query publik tidak akan mengalami error:
- *
- * "Unauthorized - Session does not match project host"
- *
- * akibat token milik project Sanity lain.
- */
+// Client publik tanpa token.
+// Hanya membaca dokumen yang sudah dipublikasikan.
+//
+// useCdn: false melewati CDN Sanity.
+// Cache Next.js tetap diatur pada masing-masing client.fetch.
 export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-
-  /**
-   * false:
-   * mengambil data terbaru langsung dari Sanity Content Lake.
-   *
-   * Sangat cocok untuk website yang kontennya sering diperbarui.
-   */
   useCdn: false,
-
-  /**
-   * Hanya mengambil dokumen yang sudah dipublish.
-   *
-   * Draft tidak ditampilkan ke website publik.
-   */
   perspective: 'published',
 });
 
 // =========================================================
-// 3. CLIENT WRITE / MUTATION
+// 3. CLIENT MUTATION — HANYA UNTUK SERVER
 // =========================================================
 
-/**
- * Gunakan fungsi ini HANYA untuk proses server-side:
- *
- * - app/api/.../route.ts
- * - webhook
- * - Server Action
- * - Cron
- * - patch()
- * - create()
- * - delete()
- *
- * Jangan digunakan di Client Component.
- *
- * Environment variable:
- *
- * SANITY_API_WRITE_TOKEN
- *
- * Token HARUS dibuat dari Sanity project:
- *
- * 49hcvicd
- *
- * Jangan menggunakan:
- *
- * NEXT_PUBLIC_SANITY_API_WRITE_TOKEN
- */
 export function getWriteClient() {
-  // -------------------------------------------------------
-  // Proteksi agar write client tidak dijalankan di browser
-  // -------------------------------------------------------
-
   if (typeof window !== 'undefined') {
     throw new Error(
       'Sanity write client hanya boleh digunakan di server.'
     );
   }
 
-  // -------------------------------------------------------
-  // Ambil private token
-  // -------------------------------------------------------
-
-  const token = process.env.SANITY_API_WRITE_TOKEN;
+  const token = process.env.SANITY_API_WRITE_TOKEN?.trim();
 
   if (!token) {
     throw new Error(
       'SANITY_API_WRITE_TOKEN belum tersedia. ' +
-        'Tambahkan token Sanity project 49hcvicd ke Environment Variables.'
+        'Tambahkan token dari project Sanity 49hcvicd ' +
+        'ke Environment Variables server.'
     );
   }
-
-  // -------------------------------------------------------
-  // Buat client khusus mutation
-  // -------------------------------------------------------
 
   return createClient({
     projectId,
     dataset,
     apiVersion,
     useCdn: false,
-    token,
     perspective: 'published',
+    token,
   });
 }
 
@@ -160,51 +68,37 @@ export function getWriteClient() {
 // 4. IMAGE URL BUILDER
 // =========================================================
 
-/**
- * Sanity versi baru menggunakan named export:
- *
- * createImageUrlBuilder
- *
- * Bukan lagi:
- *
- * import imageUrlBuilder from '@sanity/image-url'
- *
- * sehingga warning:
- *
- * "The default export of @sanity/image-url has been deprecated"
- *
- * tidak muncul lagi.
- */
 const imageBuilder = createImageUrlBuilder(client);
 
-/**
- * Helper untuk membuat URL gambar Sanity.
- *
- * Contoh:
- *
- * urlFor(post.mainImage)
- *   .width(800)
- *   .height(450)
- *   .auto('format')
- *   .url()
- */
+// Mendukung crop dan hotspot dari gambar Sanity.
+//
+// Contoh:
+// urlFor(post.mainImage)
+//   .width(1200)
+//   .height(630)
+//   .fit('crop')
+//   .format('jpg')
+//   .url();
 export function urlFor(source: SanityImageSource) {
   return imageBuilder.image(source);
 }
 
 // =========================================================
-// 5. QUERY BERITA HALAMAN UTAMA
+// 5. QUERY SELURUH ARTIKEL UNTUK HOMEPAGE
 // =========================================================
 
-/**
- * Mengambil seluruh berita dari tipe "post"
- * dan mengurutkannya berdasarkan publishedAt terbaru.
- */
+// Artikel harus mempunyai slug agar tautannya bisa dibuka.
+// publishedAt kosong memakai tanggal pembuatan dokumen.
 export const indexQuery = `
   *[
-    _type == "post"
+    _type == "post" &&
+    defined(slug.current) &&
+    slug.current != ""
   ]
-  | order(coalesce(publishedAt, _createdAt) desc, _id asc) {
+  | order(
+      coalesce(publishedAt, _createdAt) desc,
+      _id asc
+    ) {
     _id,
     title,
     "slug": slug.current,
@@ -217,21 +111,24 @@ export const indexQuery = `
 `;
 
 // =========================================================
-// 6. QUERY DETAIL BERITA
+// 6. QUERY DETAIL ARTIKEL
 // =========================================================
 
-/**
- * Mengambil satu berita berdasarkan slug.
- */
+// mainImage diteruskan utuh:
+// asset._ref, crop, hotspot, alt, dan caption.
+//
+// body diteruskan utuh, termasuk blok gambar,
+// agar kompatibel dengan renderer PortableText.
 export const postDetailQuery = `
   *[
     _type == "post" &&
     slug.current == $slug
-  ][0] {
+  ]
+  | order(_updatedAt desc, _id asc)[0] {
     _id,
-
+    _createdAt,
+    _updatedAt,
     title,
-
     "slug": slug.current,
 
     category->{
@@ -240,62 +137,50 @@ export const postDetailQuery = `
       isHighlight
     },
 
-    publishedAt,
-
+    "publishedAt": coalesce(publishedAt, _createdAt),
     author,
-
     editor,
-
     mainImage,
-
     youtubeUrl,
-
     summary,
-
     body
   }
 `;
 
 // =========================================================
-// 7. QUERY TOPIK PILIHAN / HIGHLIGHT
+// 7. QUERY TOPIK PILIHAN
 // =========================================================
 
-/**
- * Mengambil kategori yang memiliki:
- *
- * isHighlight == true
- *
- * kemudian mengambil dua berita terbaru di dalamnya.
- */
+// Jika beberapa kategori ditandai highlight,
+// pilih kategori yang terakhir diperbarui.
+//
+// Ambil maksimal dua artikel dari kategori tersebut.
 export const highlightCategoryQuery = `
   *[
     _type == "category" &&
     isHighlight == true
-  ][0] {
-
+  ]
+  | order(_updatedAt desc, _id asc)[0] {
     _id,
-
     title,
 
-    "posts":
-      *[
-        _type == "post" &&
-        references(^._id)
-      ]
-      | order(publishedAt desc)[0..1] {
-
-        _id,
-
-        title,
-
-        "slug": slug.current,
-
-        publishedAt,
-
-        mainImage,
-
-        youtubeUrl
-      }
+    "posts": *[
+      _type == "post" &&
+      defined(slug.current) &&
+      slug.current != "" &&
+      category._ref == ^._id
+    ]
+    | order(
+        coalesce(publishedAt, _createdAt) desc,
+        _id asc
+      )[0..1] {
+      _id,
+      title,
+      "slug": slug.current,
+      "publishedAt": coalesce(publishedAt, _createdAt),
+      mainImage,
+      youtubeUrl
+    }
   }
 `;
 
@@ -303,37 +188,18 @@ export const highlightCategoryQuery = `
 // 8. QUERY IKLAN
 // =========================================================
 
-/**
- * Mengambil iklan berdasarkan placement.
- *
- * Contoh placement:
- *
- * left
- * center
- * right
- * 300x600
- *
- * Tidak perlu mencari:
- *
- * "drafts." + $placement
- *
- * karena drafts. adalah prefix _id Sanity,
- * bukan nilai dari field placement.
- */
+// Jika placement sama digunakan beberapa iklan,
+// pilih dokumen yang terakhir diperbarui.
 export const adsQuery = `
   *[
     _type == "iklan" &&
     placement == $placement
-  ][0] {
-
+  ]
+  | order(_updatedAt desc, _id asc)[0] {
     _id,
-
     title,
-
     image,
-
     linkUrl,
-
     placement
   }
 `;
@@ -342,90 +208,68 @@ export const adsQuery = `
 // 9. QUERY SLIDESHOW
 // =========================================================
 
-/**
- * Hanya slideshow aktif yang ditampilkan.
- */
+// Hanya mengambil slideshow aktif.
+// Urutan kosong ditempatkan setelah urutan yang sudah diisi.
 export const slideshowQuery = `
   *[
     _type == "slideshow" &&
     isActive == true
   ]
-  | order(order asc) {
-
+  | order(
+      coalesce(order, 999999) asc,
+      _id asc
+    ) {
     _id,
-
     title,
-
     image,
-
     linkUrl,
-
     order
   }
 `;
 
 // =========================================================
-// 10. QUERY POSTINGAN TERBARU
+// 10. QUERY SEPULUH ARTIKEL TERBARU
 // =========================================================
 
-/**
- * Mengambil maksimal 10 berita terbaru.
- *
- * Range:
- *
- * [0..9]
- *
- * = 10 dokumen.
- */
 export const terbaruQuery = `
   *[
-    _type == "post"
+    _type == "post" &&
+    defined(slug.current) &&
+    slug.current != ""
   ]
-  | order(publishedAt desc)[0..9] {
-
+  | order(
+      coalesce(publishedAt, _createdAt) desc,
+      _id asc
+    )[0..9] {
     _id,
-
     title,
-
     "slug": slug.current,
-
-    publishedAt,
-
+    "publishedAt": coalesce(publishedAt, _createdAt),
     author,
-
     mainImage,
-
     youtubeUrl,
-
     "categoryTitle": category->title
   }
 `;
 
 // =========================================================
-// 11. QUERY SEMUA PRESTASI SISWA
+// 11. QUERY SELURUH PRESTASI SISWA
 // =========================================================
 
-/**
- * Sesuai dengan schema:
- *
- * sanity/schemaTypes/prestasi.ts
- *
- * Prestasi terbaru tampil paling atas.
- */
+// Struktur foto dipertahankan agar tetap cocok
+// dengan komponen prestasi yang sudah digunakan.
 export const prestasiQuery = `
   *[
     _type == "prestasi"
   ]
-  | order(tanggalLomba desc) {
-
+  | order(
+      coalesce(tanggalLomba, _createdAt) desc,
+      _id asc
+    ) {
     _id,
-
     jenisLomba,
-
     juaraLomba,
-
     namaSiswa,
-
     tanggalLomba,
 
     foto {
@@ -450,23 +294,15 @@ export const prestasiQuery = `
 // 12. QUERY DETAIL PRESTASI
 // =========================================================
 
-/**
- * Mengambil satu prestasi berdasarkan Sanity Document ID.
- */
 export const prestasiDetailQuery = `
   *[
     _type == "prestasi" &&
     _id == $id
   ][0] {
-
     _id,
-
     jenisLomba,
-
     juaraLomba,
-
     namaSiswa,
-
     tanggalLomba,
 
     foto {
@@ -488,30 +324,21 @@ export const prestasiDetailQuery = `
 `;
 
 // =========================================================
-// 13. QUERY PRESTASI TERBARU
+// 13. QUERY ENAM PRESTASI TERBARU
 // =========================================================
 
-/**
- * Mengambil maksimal 6 prestasi terbaru.
- *
- * [0..5] = 6 dokumen.
- *
- * Cocok untuk widget prestasi di homepage.
- */
 export const prestasiTerbaruQuery = `
   *[
     _type == "prestasi"
   ]
-  | order(tanggalLomba desc)[0..5] {
-
+  | order(
+      coalesce(tanggalLomba, _createdAt) desc,
+      _id asc
+    )[0..5] {
     _id,
-
     jenisLomba,
-
     juaraLomba,
-
     namaSiswa,
-
     tanggalLomba,
 
     foto {
