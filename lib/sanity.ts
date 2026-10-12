@@ -204,11 +204,11 @@ export const indexQuery = `
   *[
     _type == "post"
   ]
-  | order(publishedAt desc) {
+  | order(coalesce(publishedAt, _createdAt) desc, _id asc) {
     _id,
     title,
     "slug": slug.current,
-    publishedAt,
+    "publishedAt": coalesce(publishedAt, _createdAt),
     author,
     mainImage,
     youtubeUrl,
